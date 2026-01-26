@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Home • Portfolio{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 p-4">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="mb-1">Cole Tindall</h1>
+      <p class="mb-0 text-muted">Informatics Lead</p>
+    </div>
+
+    <span class="badge rounded-pill bg-dark px-3 py-2">
+      Flask • Web Application• Module 1
+    </span>
+  </div>
+
+  <!-- Bio LEFT, Image RIGHT (Requirement) -->
+  <div class="row g-4 align-items-center">
+    <div class="col-md-7">
+      <h2 class="h5">Bio</h2>
+      <p class="mb-3">
+        Computational Biologist focused on large-scale harmonization projects and Systems Biology. I build tools using new AI/ML techniques
+        that enables researchers to study cross disease multi-modal data.
+      </p>
+
+      <div class="fun-facts p-3 rounded">
+        <h3 class="h6 mb-2">Quick Bits</h3>
+        <ul class="mb-0">
+          <li>Hobbies: Rock Climbing, Gym , Hiking</li>
+          <li> Classes: Calculus for Engineers , Modern Software Concentps in Python</li>
+          <li>Fun fact: I have a 3yr old German Shepherd named Lilah</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-5 text-center">
+      <img
+        src="{{ url_for('static', filename='img/profile.jpg') }}"
+        class="profile-img shadow-sm"
+        alt="Profile picture"
+      />
+      <p class="text-muted small mt-2 mb-0">Add your own image in static/img/profile.jpg</p>
+    </div>
+  </div>
+
+  <hr class="my-4"/>
+
+  <!-- Contact info (Requirement includes email + LinkedIn) -->
+  <div class="row g-3">
+    <div class="col-md-6">
+      <h2 class="h5">Contact Info</h2>
+      <p class="mb-1"><strong>Email:</strong> cole.tindall@gmail.com</p>
+      <p class="mb-0"><strong>LinkedIn:</strong>
+        <a href="https://www.linkedin.com/in/coletindall/" target="_blank" rel="noreferrer">
+          LinkedIn
+        </a>
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      <h2 class="h5">What I’m Working On</h2>
+      <p class="mb-0">
+        Simulation environments, RL and AI enabled tools for harmonization of heterogenous data.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

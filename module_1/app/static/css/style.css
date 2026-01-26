@@ -1,0 +1,45 @@
+/* Make navbar colorized and distinct from page */
+.nav-accent {
+    background: linear-gradient(90deg, #0b5ed7, #20c997);
+  }
+  
+  /* Active tab highlight (requirement) */
+  .navbar .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-left: 0.25rem;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+  }
+  
+  .navbar .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .active-tab {
+    color: #0b1f3a !important;
+    background: #ffffff !important;
+    font-weight: 700;
+  }
+  
+  /* Profile image styling */
+  .profile-img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 4px solid rgba(0,0,0,0.08);
+  }
+  
+  /* Fun section styling */
+  .fun-facts {
+    background: rgba(32, 201, 151, 0.10);
+    border: 1px solid rgba(32, 201, 151, 0.25);
+  }
+  
+  /* Projects card styling */
+  .project-card {
+    background: rgba(13, 110, 253, 0.06);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+  }
+  
