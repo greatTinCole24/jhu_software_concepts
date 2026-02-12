@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #1b1f2a;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 3rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e6f0;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+button {
+  background: #2f6fed;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button[disabled] {
+  background: #9fb6f0;
+  cursor: not-allowed;
+}
+
+.help {
+  display: block;
+  font-size: 0.85rem;
+  color: #5c677d;
+  margin-top: 0.35rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+ul {
+  padding-left: 1.1rem;
+}
