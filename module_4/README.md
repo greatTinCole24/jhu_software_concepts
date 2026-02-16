@@ -14,15 +14,3 @@ python src/app.py
 
 ```
 pytest -m "web or buttons or analysis or db or integration"
-```
-
-## Documentation
-
-Build locally:
-
-```
-pip install sphinx
-sphinx-build -b html docs/source docs/build/html
-```
-
-Publish the HTML to Read the Docs and link it here once available.
