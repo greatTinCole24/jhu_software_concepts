@@ -1,6 +1,6 @@
 # Sphinx Docs
 
-Build the docs locally:
+Build the docs locally
 
 ```
 pip install sphinx
