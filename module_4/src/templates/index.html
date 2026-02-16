@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Grad School Cafe Data Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <header class="header">
+      <div>
+        <h1>Grad School Cafe Data Analysis</h1>
+        <p>Query results from the GradCafe applicants database.</p>
+      </div>
+      <div class="actions">
+        <form method="post" action="{{ url_for('pull_data') }}">
+          <button
+            type="submit"
+            data-testid="pull-data-btn"
+            {% if pull_in_progress %}disabled{% endif %}
+          >
+            Pull Data
+          </button>
+          <span class="help">
+            {% if pull_in_progress %}
+              Pull in progress. Please wait.
+            {% else %}
+              Pulls new GradCafe data and adds it to the database.
+            {% endif %}
+          </span>
+        </form>
+        <form method="post" action="{{ url_for('update_analysis') }}">
+          <button
+            type="submit"
+            data-testid="update-analysis-btn"
+            {% if pull_in_progress %}disabled{% endif %}
+          >
+            Update Analysis
+          </button>
+          <span class="help">
+            {% if pull_in_progress %}
+              Update paused while pull is running.
+            {% else %}
+              Refreshes the analysis with the newest data.
+            {% endif %}
+          </span>
+        </form>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>Core Questions</h2>
+        <ul>
+          <li>Answer: Fall 2026 entries: {{ results.fall_2026_count }}</li>
+          <li>Answer: International percentage: {{ results.international_percent | pct2 }}%</li>
+          <li>Answer: Avg GPA: {{ results.avg_gpa }}</li>
+          <li>Answer: Avg GRE: {{ results.avg_gre }}</li>
+          <li>Answer: Avg GRE V: {{ results.avg_gre_v }}</li>
+          <li>Answer: Avg GRE AW: {{ results.avg_gre_aw }}</li>
+          <li>Answer: Avg GPA (American, Fall 2026): {{ results.avg_gpa_american_fall }}</li>
+          <li>Answer: Acceptance % (Fall 2026): {{ results.accept_percent_fall | pct2 }}%</li>
+          <li>Answer: Avg GPA (Accepted, Fall 2026): {{ results.avg_gpa_accept_fall }}</li>
+          <li>Answer: JHU MS CS applicants: {{ results.jhu_ms_cs }}</li>
+          <li>Answer: CS PhD accepts (2026, target schools): {{ results.cs_phd_accept_2026 }}</li>
+          <li>Answer: CS PhD accepts w/ LLM fields: {{ results.cs_phd_accept_2026_llm }}</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Extra Question 1</h2>
+        <p>Average GPA by decision status (Fall 2026):</p>
+        <ul>
+          {% for status, avg_gpa in results.extra_q1 %}
+            <li>Answer: {{ status }}: {{ avg_gpa }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Extra Question 2</h2>
+        <p>Top 5 universities by submissions (Fall 2026):</p>
+        <ul>
+          {% for uni, total in results.extra_q2 %}
+            <li>Answer: {{ uni }}: {{ total }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
