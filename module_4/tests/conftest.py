@@ -3,6 +3,7 @@ import sys
 
 SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
 if SRC_DIR not in sys.path:
+    # Ensure test imports resolve to local src modules.
     sys.path.insert(0, SRC_DIR)
 
 import psycopg
@@ -13,6 +14,7 @@ from load_data import create_table, get_conninfo
 
 @pytest.fixture(autouse=True)
 def default_pg_env(monkeypatch):
+    # Default to current USER when PGUSER is unset for local dev.
     if not os.getenv("DATABASE_URL"):
         if not os.getenv("PGUSER") and os.getenv("USER"):
             monkeypatch.setenv("PGUSER", os.getenv("USER"))
@@ -21,6 +23,7 @@ def default_pg_env(monkeypatch):
 
 @pytest.fixture
 def sample_rows():
+    # Baseline sample applicant row for tests.
     return [
         {
             "program": "Computer Science, Johns Hopkins University",
@@ -43,6 +46,7 @@ def sample_rows():
 
 @pytest.fixture
 def sample_rows_extra(sample_rows):
+    # Extend baseline data with an additional unique row.
     extra = {
         "program": "Computer Science, Massachusetts Institute of Technology",
         "comments": "Test row 2",
@@ -64,6 +68,7 @@ def sample_rows_extra(sample_rows):
 
 @pytest.fixture
 def sample_analysis():
+    # Known analysis values used by rendering and formatting tests.
     return {
         "fall_2026_count": 12,
         "international_percent": 39.284,
@@ -84,11 +89,13 @@ def sample_analysis():
 
 @pytest.fixture
 def db_conninfo():
+    # Provide resolved connection info for DB tests.
     return get_conninfo()
 
 
 @pytest.fixture
 def db_conn(db_conninfo):
+    # Create/cleanup a fresh DB connection for each test.
     conn = psycopg.connect(db_conninfo)
     conn.autocommit = True
     create_table(conn)

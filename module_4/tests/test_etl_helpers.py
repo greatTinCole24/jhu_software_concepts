@@ -11,6 +11,7 @@ from module_2 import scrape as scrape_module
 
 @pytest.mark.db
 def test_load_data_helpers_round_trip(tmp_path, monkeypatch):
+    # Arrange: set env vars and sample rows for helper coverage.
     monkeypatch.setenv("DATABASE_URL", "postgresql://example/test")
     assert get_conninfo() == "postgresql://example/test"
     monkeypatch.delenv("DATABASE_URL", raising=False)
@@ -38,6 +39,7 @@ def test_load_data_helpers_round_trip(tmp_path, monkeypatch):
         }
     ]
     prepared = prepare_rows(rows)
+    # Assert: parsing helpers extract numeric values.
     assert prepared[0]["gpa"] == 3.9
     assert prepared[0]["gre"] == 330.0
     assert parse_date("Jan 2, 2024") is not None
@@ -49,13 +51,17 @@ def test_load_data_helpers_round_trip(tmp_path, monkeypatch):
     path = tmp_path / "rows.json"
     path.write_text(json.dumps(rows), encoding="utf-8")
     loaded = load_json_data(str(path))
+    # Assert: JSON load returns prepared rows.
     assert loaded == prepared
 
 
 @pytest.mark.db
 def test_clean_module_json_and_jsonl(tmp_path):
+    # Arrange: sample raw row for cleaning and IO.
     raw = [{"program": "  CS  ", "university": " MIT "}]
+    # Act: clean whitespace and save/load.
     cleaned = clean_module.clean_data(raw)
+    # Assert: fields are normalized and IO supports JSON/JSONL.
     assert cleaned[0]["llm-generated-program"] == "CS"
     assert cleaned[0]["llm-generated-university"] == "MIT"
 
@@ -70,6 +76,7 @@ def test_clean_module_json_and_jsonl(tmp_path):
 
 @pytest.mark.db
 def test_scrape_fetch_and_clean(monkeypatch):
+    # Arrange: stub HTTP request for fetch.
     class DummyResponse:
         def __init__(self, data):
             self.data = data
@@ -80,6 +87,7 @@ def test_scrape_fetch_and_clean(monkeypatch):
         return DummyResponse(b"<html> ok </html>")
 
     monkeypatch.setattr(scrape_module.http, "request", fake_request)
+    # Act/Assert: fetch returns decoded HTML and clean normalizes text.
     assert scrape_module.fetch("https://example.com") == "<html> ok </html>"
     assert scrape_module.clean("  Hello   world ") == "Hello world"
     assert scrape_module.clean(None) is None
@@ -87,6 +95,7 @@ def test_scrape_fetch_and_clean(monkeypatch):
 
 @pytest.mark.db
 def test_scrape_data_parsing_and_save(tmp_path, monkeypatch):
+    # Arrange: small HTML table with mixed rows.
     html = """
     <table>
       <tr><td>a</td><td>b</td><td>c</td><td>d</td></tr>
@@ -113,7 +122,9 @@ def test_scrape_data_parsing_and_save(tmp_path, monkeypatch):
         return html
 
     monkeypatch.setattr(scrape_module, "fetch", fake_fetch)
+    # Act: scrape page into structured rows.
     results = scrape_module.scrape_data(min_entries=1, max_pages=1, per_page=1)
+    # Assert: parsed rows include derived fields and URLs.
     assert len(results) == 2
     assert results[0]["citizenship"] == "International"
     assert results[0]["semester_year_start"] == "Fall 2026"
@@ -123,21 +134,25 @@ def test_scrape_data_parsing_and_save(tmp_path, monkeypatch):
     output = tmp_path / "raw.json"
     scrape_module.save_data(results, str(output))
     loaded = json.loads(output.read_text(encoding="utf-8"))
+    # Assert: saved output matches scraped rows.
     assert loaded == results
 
 
 @pytest.mark.db
 def test_scrape_data_empty_pages(monkeypatch):
+    # Arrange: empty page returns no entries.
     def fake_fetch(url):
         return "<html></html>"
 
     monkeypatch.setattr(scrape_module, "fetch", fake_fetch)
+    # Act/Assert: scraper yields empty list.
     results = scrape_module.scrape_data(min_entries=1, max_pages=10, per_page=1)
     assert results == []
 
 
 @pytest.mark.db
 def test_query_conninfo_and_main(monkeypatch, capsys):
+    # Arrange: set env vars and stub analysis output.
     monkeypatch.setenv("DATABASE_URL", "postgresql://example/test")
     assert query_data.get_conninfo() == "postgresql://example/test"
     monkeypatch.delenv("DATABASE_URL", raising=False)
@@ -150,14 +165,17 @@ def test_query_conninfo_and_main(monkeypatch, capsys):
         return {"a": 1, "b": 2}
 
     monkeypatch.setattr(query_data, "get_analysis", fake_get_analysis)
+    # Act: run query main and capture output.
     query_data.main()
     output = capsys.readouterr().out
+    # Assert: printed output includes analysis keys.
     assert "a: 1" in output
     assert "b: 2" in output
 
 
 @pytest.mark.db
 def test_load_data_main_calls_helpers(monkeypatch):
+    # Arrange: stub out DB connect and helper functions.
     calls = {"create": 0, "insert": 0}
 
     def fake_connect(conninfo):
@@ -184,6 +202,8 @@ def test_load_data_main_calls_helpers(monkeypatch):
     monkeypatch.setattr(load_data, "create_table", fake_create_table)
     monkeypatch.setattr(load_data, "insert_rows", fake_insert_rows)
 
+    # Act: run load_data main.
     load_data.main()
+    # Assert: table created and rows inserted.
     assert calls["create"] == 1
     assert calls["insert"] == 1

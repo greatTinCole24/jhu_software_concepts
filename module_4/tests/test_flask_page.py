@@ -7,7 +7,9 @@ from app import create_app
 
 @pytest.mark.web
 def test_app_factory_and_routes():
+    # Create app and inspect routes
     app = create_app(config={"TESTING": True})
+    # Core endpoints are registered
     assert isinstance(app, Flask)
     routes = {rule.rule for rule in app.url_map.iter_rules()}
     assert "/" in routes
@@ -18,6 +20,7 @@ def test_app_factory_and_routes():
 
 @pytest.mark.web
 def test_get_analysis_page_renders(sample_analysis):
+    # Analysis data for rendering.
     def analysis_fn():
         return sample_analysis
 

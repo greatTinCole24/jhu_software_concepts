@@ -5,6 +5,7 @@ from app import create_app
 
 @pytest.mark.analysis
 def test_answer_labels_and_percent_formatting(sample_analysis):
+    # Analysis function to return known values for formatting checks
     def analysis_fn():
         return sample_analysis
 
@@ -13,7 +14,9 @@ def test_answer_labels_and_percent_formatting(sample_analysis):
         analysis_fn=analysis_fn,
     )
     client = app.test_client()
+    # Requests the analysis page
     response = client.get("/analysis")
+    # Checks if answer label and percentage formatting are present
     assert response.status_code == 200
     body = response.get_data(as_text=True)
     assert "Answer:" in body
@@ -24,6 +27,7 @@ def test_answer_labels_and_percent_formatting(sample_analysis):
 
 @pytest.mark.analysis
 def test_percent_filter_handles_none(sample_analysis):
+    # Sets None fields 0.00% fallback
     sample_analysis = dict(sample_analysis)
     sample_analysis["international_percent"] = None
     sample_analysis["accept_percent_fall"] = None

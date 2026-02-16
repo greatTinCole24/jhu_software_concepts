@@ -4,21 +4,19 @@ from app import create_app
 
 @pytest.mark.buttons
 def test_post_pull_data_triggers_loader(sample_rows):
+    # Checks if the loader is triggered
     calls = {"loader": 0, "cleaned": None}
-
+    # Helper Functions listed below 
     def fake_scraper():
         return sample_rows
-
     def fake_cleaner(rows):
         return rows
-
     def fake_loader(rows):
         calls["loader"] += 1
         calls["cleaned"] = rows
-
     def fake_analysis():
         return {}
-
+    # Creates the app using fake funcs
     app = create_app(
         config={"TESTING": True, "RUN_ASYNC": False},
         scraper=fake_scraper,
@@ -33,23 +31,19 @@ def test_post_pull_data_triggers_loader(sample_rows):
     assert calls["loader"] == 1
     assert calls["cleaned"] == sample_rows
 
-
+# 
 @pytest.mark.buttons
 def test_post_pull_data_async_returns_202(sample_rows):
     import threading
     done = threading.Event()
     def fake_scraper():
         return sample_rows
-
     def fake_loader(rows):
         done.set()
-
     def fake_cleaner(rows):
         return rows
-
     def fake_analysis():
         return {}
-
     app = create_app(
         config={"TESTING": True, "RUN_ASYNC": True},
         scraper=fake_scraper,
@@ -66,12 +60,13 @@ def test_post_pull_data_async_returns_202(sample_rows):
 
 @pytest.mark.buttons
 def test_post_update_analysis_calls_query(sample_analysis):
+    # Count analysis func call
     calls = {"analysis": 0}
-
+    # Fake helper functions 
     def fake_analysis():
         calls["analysis"] += 1
         return sample_analysis
-
+    # Call App func
     app = create_app(
         config={"TESTING": True},
         analysis_fn=fake_analysis,
