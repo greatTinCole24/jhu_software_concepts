@@ -7,7 +7,7 @@ from query_data import get_analysis
 
 @pytest.mark.db
 def test_insert_on_pull(db_conn, sample_rows):
-    # Configures app to load rows synchronously into the DB.
+    # Configures app to load rows synchronously into the DB
     def fake_scraper():
         return sample_rows
     # Helper Functions listed below 
@@ -24,9 +24,9 @@ def test_insert_on_pull(db_conn, sample_rows):
         analysis_fn=fake_analysis,
     )
     client = app.test_client()
-    # Trigger a pull to insert rows.
+    # Trigger a pull to insert rows
     response = client.post("/pull-data")
-    # One row inserted with required fields.
+    # One row inserted with required fields
     assert response.status_code == 200
     count = db_conn.execute("SELECT COUNT(*) FROM applicants").fetchone()[0]
     assert count == 1
@@ -41,7 +41,7 @@ def test_insert_on_pull(db_conn, sample_rows):
 
 @pytest.mark.db
 def test_idempotency_on_duplicate_rows(db_conn, sample_rows):
-    # Same row pulled twice should not create duplicates.
+    # Same row pulled twice should not create duplicates
     def fake_scraper():
         return sample_rows
 
@@ -57,11 +57,11 @@ def test_idempotency_on_duplicate_rows(db_conn, sample_rows):
         analysis_fn=fake_analysis,
     )
     client = app.test_client()
-    # Pull twice with identical data.
+    # Pull twice with identical data
     response = client.post("/pull-data")
     assert response.status_code == 200
     response = client.post("/pull-data")
-    # Count remains at one.
+    # Count remains at one
     assert response.status_code == 200
     count = db_conn.execute("SELECT COUNT(*) FROM applicants").fetchone()[0]
     assert count == 1
@@ -69,11 +69,11 @@ def test_idempotency_on_duplicate_rows(db_conn, sample_rows):
 
 @pytest.mark.db
 def test_query_function_returns_expected_keys(db_conn, sample_rows):
-    # Insert sample data directly.
+    # Insert sample data directly
     insert_applicants(sample_rows)
     # Run analysis query.
     results = get_analysis()
-    # Expected analysis keys are present.
+    # Expected analysis keys are present
     expected_keys = {
         "fall_2026_count",
         "international_percent",
