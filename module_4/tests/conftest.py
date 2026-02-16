@@ -12,7 +12,7 @@ from load_data import create_table, get_conninfo
 
 
 @pytest.fixture(autouse=True)
-def _default_pg_env(monkeypatch):
+def default_pg_env(monkeypatch):
     if not os.getenv("DATABASE_URL"):
         if not os.getenv("PGUSER") and os.getenv("USER"):
             monkeypatch.setenv("PGUSER", os.getenv("USER"))
