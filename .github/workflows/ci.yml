@@ -49,7 +49,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
         run: |
-          pytest tests -q
+          pytest tests -q --cov-fail-under=90
 
       - name: Pylint (10/10)
         run: |
