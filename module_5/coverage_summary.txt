@@ -1,0 +1,12 @@
+---------- coverage: platform darwin, python 3.8.5-final-0 -----------
+Name                     Stmts   Miss  Cover   Missing
+------------------------------------------------------
+src/app.py                  64      0   100%
+src/load_data.py            63      0   100%
+src/module_2/clean.py       27      0   100%
+src/module_2/scrape.py      75      0   100%
+src/query_data.py           41      0   100%
+------------------------------------------------------
+TOTAL                      270      0   100%
+
+Required test coverage of 100% reached. Total coverage: 100.00%

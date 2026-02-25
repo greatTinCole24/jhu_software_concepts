@@ -1,0 +1,21 @@
+digraph dependencies {
+  rankdir=LR;
+  node [shape=box];
+
+  "app.py" -> "load_data.py";
+  "app.py" -> "query_data.py";
+  "app.py" -> "module_2.clean";
+  "app.py" -> "module_2.scrape";
+  "app.py" -> "flask";
+
+  "load_data.py" -> "db.py";
+  "load_data.py" -> "psycopg";
+  "load_data.py" -> "psycopg.sql";
+
+  "query_data.py" -> "db.py";
+  "query_data.py" -> "psycopg";
+  "query_data.py" -> "psycopg.sql";
+
+  "module_2.scrape" -> "urllib3";
+  "module_2.scrape" -> "bs4";
+}
